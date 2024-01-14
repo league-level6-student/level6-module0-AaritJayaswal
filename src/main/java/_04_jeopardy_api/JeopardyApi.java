@@ -1,6 +1,6 @@
 package _04_jeopardy_api;
 
-import _04_jeopardy_api.data_transfer_objects.Clue;
+import _04_jeopardy_api.data_transfer_objects.Anime;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -19,7 +19,7 @@ public class JeopardyApi {
 
     private final WebClient webClient;
 
-    private static final String baseUrl = "http://jservice.io/api/clues";
+    private static final String baseUrl = "https://animechan.xyz/api/random";
 
     public JeopardyApi() {
         webClient = WebClient
@@ -29,7 +29,7 @@ public class JeopardyApi {
                 .build();
     }
 
-    public Clue getClue(int value) {
+    public Anime getClue(int value) {
 
         //1  Use the WebClient code from the previous exercises to make the request:
         //Note:
@@ -38,27 +38,20 @@ public class JeopardyApi {
         //with the specified point value.
         //
         //Make sure to save the response as type Clue[].class in the bodyToMono() method call
-    	Mono<Clue[]> clueMono = webClient
-				.get()
+
+    	Anime[] anime = webClient
+                .get()
                 .retrieve()
-                .bodyToMono(Clue[].class);
+                .bodyToMono(Anime[].class)
+                .block();
 
-
-    	//Collect the response from the Mono object
-		Clue[] response = clueMono.block();
-
-		/*
-    	Print out the actual JSON response -
-    	this is what you will input into jsonschema2pojo.com
-		 */
-		System.out.println(response);
         //2
         //Get a random number less than the size of the Clue array
-		Random ran = new Random();
-		int random = ran.nextInt(response.length-1);
+   
+
         //3
         //return the clue at the random index you just created
 
-        return response[random];
+        return anime;
     }
 }

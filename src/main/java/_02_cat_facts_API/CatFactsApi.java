@@ -1,5 +1,7 @@
 package _02_cat_facts_API;
 
+import java.util.List;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -61,28 +63,33 @@ public class CatFactsApi {
         */
     }
 
-    public String getCatFact() {
+    public CatWrapper getCatFact() {
 
         //Make the request, saving the response in an object of the type that you just created in your
         //data_transfer_objects package (CatWrapper)
-    	Mono<CatWrapper> catMono = webClient
-    			.get()
-    			.retrieve()
-    			.bodyToMono(String.class);
-    	//Use block() to collect the response into a java object using the class you just created
-    	Catwrapper response = catMono.block();
-    	String responseStr = response.getData().get(0);
+    	CatWrapper response = webClient
+                .get()
+                .retrieve()
+                .bodyToMono(CatWrapper.class)
+                .block();
+ 
+    	
+
+
         //return the Object
-        return responseStr;
+        return response;
+
 
 
     }
 
     public String findCatFact(){
         //use the getCatFact method to retrieve a cat fact
-    	String fact = getCatFact();
+    	CatWrapper cw = getCatFact();
+  
         //return the first (and only) String in the Arraylist of data in the response
-        return fact;
+    	List<String> data = cw.getData();
+        return data.get(0);
     }
 
     public void setWebClient(WebClient webClient) {
